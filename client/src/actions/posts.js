@@ -10,9 +10,7 @@ import {
 // Action Creators
 export const getPosts = () => async (dispatch) => {
   try {
-    console.log("Getting post");
     const { data } = await fetchPosts();
-    console.log("data");
     dispatch({ type: "FETCH_ALL", payload: data });
   } catch (error) {
     console.log(error.message);
