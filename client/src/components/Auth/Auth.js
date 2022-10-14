@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import {
   Avatar,
   Button,
@@ -15,14 +15,19 @@ import useStyles from "./styles";
 const Auth = () => {
   const classes = useStyles();
   const [showPassword, setShowPassword] = useState(false);
+  const [isSignUp, setIsSignUp] = useState(false);
 
-  const isSignUp = false;
-
-  const handleShowPassword = ()=> setShowPassword((prevShowPassword)=>!prevShowPassword)
+  const handleShowPassword = () =>
+    setShowPassword((prevShowPassword) => !prevShowPassword);
 
   const handleSubmit = () => {};
 
   const handleChange = () => {};
+
+  const switchMode = () => {
+    setIsSignUp((prevIsSignUp) => !prevIsSignUp);
+    handleShowPassword(false);
+  };
 
   return (
     <Container component="main" maxWidth="xs">
@@ -81,6 +86,15 @@ const Auth = () => {
           >
             {isSignUp ? "Sign Up" : "Sign In"}
           </Button>
+          <Grid container justifyContent="flex-end">
+            <Grid item>
+              <Button onClick={switchMode}>
+                {isSignUp
+                  ? "Already have an account? Sign In"
+                  : "Don't have an account? Sign Up"}
+              </Button>
+            </Grid>
+          </Grid>
         </form>
       </Paper>
     </Container>
