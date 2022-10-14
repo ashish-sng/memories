@@ -8,7 +8,11 @@ import {
   Container,
 } from "@material-ui/core";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+import { GoogleLogin } from "@react-oauth/google";
 import Input from "./Input";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import jwt_decode from "jwt-decode";
 
 import useStyles from "./styles";
 
@@ -16,6 +20,8 @@ const Auth = () => {
   const classes = useStyles();
   const [showPassword, setShowPassword] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleShowPassword = () =>
     setShowPassword((prevShowPassword) => !prevShowPassword);
@@ -27,6 +33,27 @@ const Auth = () => {
   const switchMode = () => {
     setIsSignUp((prevIsSignUp) => !prevIsSignUp);
     handleShowPassword(false);
+  };
+
+  const googleSuccess = async (res) => {
+    // console.log(res.credential);
+    const decoded = jwt_decode(res.credential);
+    // console.log(decoded);
+    const { name, picture, sub } = decoded;
+    const googleId = sub;
+    const token = res.credential;
+    // console.log(token);
+    try {
+      dispatch({ type: "AUTH", data: { name, picture, googleId, token } });
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const googleFailure = async (error) => {
+    console.log(error);
+    console.log("Google Sign In failed.");
   };
 
   return (
@@ -86,6 +113,13 @@ const Auth = () => {
           >
             {isSignUp ? "Sign Up" : "Sign In"}
           </Button>
+          <GoogleLogin
+            onSuccess={(res) => {
+              console.log(res);
+              googleSuccess(res);
+            }}
+            onError={(error) => googleFailure(error)}
+          />
           <Grid container justifyContent="flex-end">
             <Grid item>
               <Button onClick={switchMode}>
