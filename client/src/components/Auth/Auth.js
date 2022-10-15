@@ -13,36 +13,53 @@ import Input from "./Input";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import jwt_decode from "jwt-decode";
+import { signin, signup } from "../../actions/auth";
 
 import useStyles from "./styles";
+
+const initialState = {
+  firstName: "",
+  lastName: "",
+  email: "",
+  password: "",
+  confirmPassword: "",
+};
 
 const Auth = () => {
   const classes = useStyles();
   const [showPassword, setShowPassword] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
+  const [formData, setFormData] = useState(initialState);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleShowPassword = () =>
     setShowPassword((prevShowPassword) => !prevShowPassword);
 
-  const handleSubmit = () => {};
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
-  const handleChange = () => {};
+    if (isSignUp) {
+      dispatch(signup(formData, navigate));
+    } else {
+      dispatch(signin(formData, navigate));
+    }
+  };
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   const switchMode = () => {
     setIsSignUp((prevIsSignUp) => !prevIsSignUp);
-    handleShowPassword(false);
+    setShowPassword(false);
   };
 
   const googleSuccess = async (res) => {
-    // console.log(res.credential);
     const decoded = jwt_decode(res.credential);
-    // console.log(decoded);
     const { name, picture, sub } = decoded;
     const googleId = sub;
     const token = res.credential;
-    // console.log(token);
     try {
       dispatch({ type: "AUTH", data: { name, picture, googleId, token } });
       navigate("/");
@@ -115,7 +132,7 @@ const Auth = () => {
           </Button>
           <GoogleLogin
             onSuccess={(res) => {
-              console.log(res);
+              // console.log(res);
               googleSuccess(res);
             }}
             onError={(error) => googleFailure(error)}

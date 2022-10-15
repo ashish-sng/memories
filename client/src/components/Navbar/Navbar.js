@@ -20,8 +20,6 @@ const Navbar = () => {
     setUser(null);
   };
 
-  // console.log(user);
-
   useEffect(() => {
     const token = user?.token;
 
@@ -57,10 +55,10 @@ const Navbar = () => {
               alt={user.name}
               src={user.picture}
             >
-              {user.name.charAt(0)}
+              {user?.name?.charAt(0) || user?.result?.name?.charAt(0)}
             </Avatar>
             <Typography className={classes.userName} variant="h6">
-              {user.name}
+              {user.name || user.result.name}
             </Typography>
             <Button
               variant="contained"
