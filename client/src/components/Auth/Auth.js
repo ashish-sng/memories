@@ -57,11 +57,12 @@ const Auth = () => {
 
   const googleSuccess = async (res) => {
     const decoded = jwt_decode(res.credential);
-    const { name, picture, sub } = decoded;
+    const { name, picture, sub, email } = decoded;
     const googleId = sub;
     const token = res.credential;
+    const result = { name, picture, googleId, email };
     try {
-      dispatch({ type: "AUTH", data: { name, picture, googleId, token } });
+      dispatch({ type: "AUTH", data: { result, token } });
       navigate("/");
     } catch (error) {
       console.log(error);
@@ -132,7 +133,6 @@ const Auth = () => {
           </Button>
           <GoogleLogin
             onSuccess={(res) => {
-              // console.log(res);
               googleSuccess(res);
             }}
             onError={(error) => googleFailure(error)}

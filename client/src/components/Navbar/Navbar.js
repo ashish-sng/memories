@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { AppBar, Avatar, Button, Toolbar, Typography } from "@material-ui/core";
 import { useDispatch } from "react-redux";
+import decode from "jwt-decode";
 
 import useStyles from "./styles";
 import memories from "../../images/memories.png";
@@ -23,7 +24,11 @@ const Navbar = () => {
   useEffect(() => {
     const token = user?.token;
 
-    //JWT based...
+    if (token) {
+      const decodedToken = decode(token);
+
+      if (decodedToken.exp * 1000 < new Date().getTime()) logout();
+    }
 
     setUser(JSON.parse(localStorage.getItem("profile")));
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -52,10 +57,10 @@ const Navbar = () => {
           <div className={classes.profile}>
             <Avatar
               className={classes.purple}
-              alt={user.name}
-              src={user.picture}
+              alt={user.result.name}
+              src={user.result.picture}
             >
-              {user?.name?.charAt(0) || user?.result?.name?.charAt(0)}
+              {user?.result?.name?.charAt(0)}
             </Avatar>
             <Typography className={classes.userName} variant="h6">
               {user.name || user.result.name}
