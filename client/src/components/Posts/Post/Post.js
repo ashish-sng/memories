@@ -24,7 +24,6 @@ const Post = ({ post, setCurrentId }) => {
   const user = useSelector((state) => state.auth.authData);
 
   const Likes = () => {
-    console.log(post);
     if (post.likes.length > 0) {
       return post.likes.find(
         (like) => like === (user?.result?.googleId || user?.result?._id)
