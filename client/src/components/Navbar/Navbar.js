@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { AppBar, Avatar, Button, Toolbar, Typography } from "@material-ui/core";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import decode from "jwt-decode";
 
 import useStyles from "./styles";
@@ -10,15 +10,20 @@ import memories from "../../images/memories.png";
 const Navbar = () => {
   const classes = useStyles();
 
-  const [user, setUser] = useState(JSON.parse(localStorage.getItem("profile")));
+  const user = useSelector((state) => state.auth.authData);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem("profile"));
+    if (storedUser) {
+      dispatch({ type: "AUTH", data: storedUser });
+    }
+  }, [dispatch]);
 
   const logout = () => {
     dispatch({ type: "LOGOUT" });
     navigate("/");
-    setUser(null);
   };
 
   useEffect(() => {
@@ -29,8 +34,6 @@ const Navbar = () => {
 
       if (decodedToken.exp * 1000 < new Date().getTime()) logout();
     }
-
-    setUser(JSON.parse(localStorage.getItem("profile")));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
 

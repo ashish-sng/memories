@@ -17,6 +17,10 @@ app.use(cors());
 app.use("/posts", postRoutes);
 app.use("/user", userRoutes);
 
+app.get("/", (req, res) => {
+  res.send("Hello to Memories APP");
+});
+
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {

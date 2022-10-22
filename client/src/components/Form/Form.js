@@ -19,11 +19,11 @@ const Form = ({ currentId, setCurrentId }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
 
-  const user = JSON.parse(localStorage.getItem("profile"));
+  const user = useSelector((state) => state.auth.authData);
 
   useEffect(() => {
     if (post) setPostData(post);
-  }, [post]);
+  }, [post, user]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -39,15 +39,14 @@ const Form = ({ currentId, setCurrentId }) => {
     clear();
   };
 
-  if(!user){
+  if (!user) {
     return (
       <Paper className={classes.paper}>
         <Typography variant="h6" align="center">
           Please Sign In to create your memories and like other's memories.
         </Typography>
       </Paper>
-
-    )
+    );
   }
 
   const clear = () => {

@@ -9,11 +9,7 @@ import Auth from "./components/Auth/Auth";
 
 const App = () => {
   return (
-    <GoogleOAuthProvider
-      clientId={
-        "934775244000-s4b3e13b0og7rcmilsprcqrp3lf215ah.apps.googleusercontent.com"
-      }
-    >
+    <GoogleOAuthProvider clientId={process.env.REACT_APP_CLIENT_ID}>
       <Router>
         <Container maxWidth="lg">
           <Navbar />
