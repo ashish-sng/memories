@@ -33,6 +33,3 @@ app.listen(PORT, () => {
     })
     .catch((error) => console.log("Error: ", error.message));
 });
-
-module.exports = app;
-module.exports.handler = serverless(app);
